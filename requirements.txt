@@ -1,0 +1,10 @@
+python-dotenv
+ollama
+sentence-transformers
+lancedb
+pyarrow
+pypdf
+python-docx
+loguru
+tqdm
+openpyxl
