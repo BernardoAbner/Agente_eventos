@@ -8,3 +8,5 @@ python-docx
 loguru
 tqdm
 openpyxl
+pandas
+kreuzberg[ocr]

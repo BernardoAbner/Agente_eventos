@@ -1,13 +1,11 @@
-# Arquivos de Bytecode e Cache do Python
+
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Ovos do Python
 *.egg
 *.egg-info
 
-# Arquivos de distribuição/build
 dist/
 build/
 develop-eggs/
@@ -18,8 +16,6 @@ wheelhouse/
 *.zip
 *.whl
 
-# Ambiente Virtual
-# Certifique-se de que o nome da sua pasta de ambiente virtual está aqui
 venv/
 env/
 ENV/
@@ -27,40 +23,21 @@ VENV/
 .venv/
 .env/
 
-# Arquivos de log e bancos de dados gerados
-# Mantenha a pasta 'data' e 'knowledge_base_documents' no repositório se quiser
-# a estrutura, mas ignore seu conteúdo pesado ou sensível.
-# Ou ignore as pastas inteiras se preferir.
 
-# Pasta de dados do LanceDB (pode ficar grande)
 data/lancedb/
 
-# Arquivo de log do agente
+
 data/agent.log
 
-# (Opcional) Se você usar ChromaDB como alternativa e ele criar uma pasta aqui
-# data/chroma_db/
-
-# ARQUIVOS DE DOCUMENTOS DA BASE DE CONHECIMENTO
-# IMPORTANTE: Estes são seus documentos proprietários.
-# Você geralmente NÃO VAI QUERER enviá-los para um repositório público
-# (e talvez nem para um privado, a menos que seja o propósito).
-# Se a pasta deve existir no repo (ex: com um placeholder .gitkeep),
-# ignore o conteúdo assim: knowledge_base_documents/*
-# Para segurança, vamos ignorar a pasta inteira.
 knowledge_base_documents/
 
-# Arquivos Excel originais que você pode ter
-# (se você criou uma pasta para eles, como 'excel_files_to_process')
 excel_files_to_process/
 
-# Arquivos de configuração do ambiente (se contiverem segredos)
 .env
 *.env
 .env.*
 !*.env.example # Permite um .env.example para mostrar a estrutura
 
-# Arquivos específicos de IDEs/Editores
 .vscode/
 .idea/
 *.project
@@ -68,12 +45,10 @@ excel_files_to_process/
 *.sublime-workspace
 nbproject/
 
-# Arquivos específicos do sistema operacional
 .DS_Store
 Thumbs.db
 Desktop.ini
 
-# Arquivos de Teste e Cobertura (se você adicionar testes)
 .pytest_cache/
 .coverage
 .coverage.*
@@ -84,12 +59,4 @@ coverage.xml
 *.lprof
 *.cprof
 
-# Arquivos Jupyter Notebook Checkpoints (se usar notebooks)
 .ipynb_checkpoints
-
-# Arquivos de cache do Sentence Transformers (geralmente não ficam no projeto, mas por segurança)
-# sentence-transformers_cache/
-# .cache/huggingface/ (geralmente no home do usuário, mas bom saber)
-
-# Modelos Ollama (geralmente não ficam no projeto, Ollama gerencia seu próprio armazenamento)
-# ollama_models/

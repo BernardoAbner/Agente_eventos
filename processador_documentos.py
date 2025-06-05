@@ -2,23 +2,17 @@ import os
 import csv
 from pypdf import PdfReader
 from docx import Document as DocxDocument
-from config import ENABLE_OCR #, OCR_BACKEND (se for usar backends alternativos de kreuzberg)
+from config import ENABLE_OCR 
 from utils import app_logger
 
-# Import condicional de kreuzberg para OCR
 if ENABLE_OCR:
     try:
         from kreuzberg import Kreis, get_parser
         app_logger.info("Modo OCR habilitado. 'kreuzberg' importado com sucesso.")
-        # Configuração do parser OCR, se necessário (ex: para backends específicos)
-        # if OCR_BACKEND == "easyocr":
-        #    Kreis.easyocr_languages = ['en', 'pt'] # Exemplo
-        # elif OCR_BACKEND == "paddleocr":
-        #    Kreis.paddleocr_languages = ['en', 'pt'] # Exemplo
 
     except ImportError:
         app_logger.warning("'kreuzberg' não encontrado. OCR não estará disponível.")
-        ENABLE_OCR = False # Desabilita se não puder importar
+        ENABLE_OCR = False
     except Exception as e:
         app_logger.error(f"Erro ao configurar kreuzberg para OCR: {e}")
         ENABLE_OCR = False
@@ -45,10 +39,7 @@ def extract_text_from_pdf(file_path: str) -> str:
         if not text and ENABLE_OCR:
             app_logger.info(f"PDF {file_path} não contém texto extraível. Tentando OCR...")
             try:
-                # Para kreuzberg, o default é 'ocr' que usa Tesseract.
-                # Se você configurou OCR_BACKEND, ele será usado.
-                # parser = get_parser(OCR_BACKEND if 'OCR_BACKEND' in globals() else 'ocr')
-                parser = get_parser('ocr') # Assume Tesseract via 'ocr'
+                parser = get_parser('ocr') 
                 kreis = Kreis(parser=parser)
                 parsed_doc = kreis.parse_file(file_path)
                 return parsed_doc.text_content if parsed_doc else ""
@@ -65,12 +56,6 @@ def extract_text_from_docx(file_path: str) -> str:
     try:
         doc = DocxDocument(file_path)
         text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-        # Você pode adicionar extração de tabelas se necessário
-        # for table in doc.tables:
-        #     for row in table.rows:
-        #         for cell in row.cells:
-        #             text += cell.text + "\t" # ou algum outro separador
-        #         text += "\n"
         return text
     except Exception as e:
         app_logger.error(f"Erro ao processar DOCX {file_path}: {e}")
@@ -82,12 +67,11 @@ def extract_text_from_csv(file_path: str) -> str:
         text_content = []
         with open(file_path, 'r', encoding='utf-8', newline='') as f:
             reader = csv.reader(f)
-            header = next(reader, None) # Pega o cabeçalho
+            header = next(reader, None)
             if header:
-                text_content.append(", ".join(header)) # Adiciona o cabeçalho como texto
+                text_content.append(", ".join(header))
 
             for row in reader:
-                # Concatena todas as colunas da linha, tratando valores vazios
                 row_text = ", ".join([val if val else "N/A" for val in row])
                 text_content.append(row_text)
         return "\n".join(text_content)
@@ -110,10 +94,7 @@ def load_documents_from_directory(directory_path: str) -> list[dict]:
 
     if ENABLE_OCR:
         app_logger.info("Verificando dependências de OCR (Tesseract, Pandoc)...")
-        # kreuzberg[ocr] depende de Tesseract e Pandoc.
-        # Uma verificação mais robusta poderia usar shutil.which()
-        # para ver se tesseract e pandoc estão no PATH.
-        # Por agora, confiamos que o usuário instalou se ENABLE_OCR=True.
+
         pass
 
 
@@ -133,10 +114,10 @@ def load_documents_from_directory(directory_path: str) -> list[dict]:
                         app_logger.warning(f"Nenhum conteúdo extraído ou conteúdo vazio para {filename}.")
                 except Exception as e:
                     app_logger.error(f"Falha ao processar o arquivo {filename}: {e}")
-            elif ENABLE_OCR and ext not in ['.txt', '.csv']: # Tentar OCR para outros formatos se habilitado
+            elif ENABLE_OCR and ext not in ['.txt', '.csv']:
                 app_logger.info(f"Tentando OCR para arquivo não textual: {filename} (ext: {ext})")
                 try:
-                    parser = get_parser('ocr') # ou OCR_BACKEND
+                    parser = get_parser('ocr') 
                     kreis = Kreis(parser=parser)
                     parsed_doc = kreis.parse_file(file_path)
                     if parsed_doc and parsed_doc.text_content:
@@ -147,8 +128,7 @@ def load_documents_from_directory(directory_path: str) -> list[dict]:
                          app_logger.warning(f"Nenhum conteúdo OCR extraído de {filename}.")
                 except Exception as e_ocr_generic:
                     app_logger.error(f"Falha no OCR para arquivo genérico {filename}: {e_ocr_generic}")
-            # else:
-            #     app_logger.debug(f"Arquivo ignorado (extensão não suportada ou OCR desabilitado): {filename}")
+        
 
 
     app_logger.info(f"Total de {len(processed_documents)} documentos processados com sucesso.")
